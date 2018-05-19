@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
         end = MPI_Wtime();
         totaltime = (end - start);
         printf("The number of prime numbers between 0 and %d is %d\n", N, result);
-        printf("the time cost is %lf\t%lfs\n", totaltime);
+        printf("the time cost is %lfs\n", totaltime);
     }
     else {
         MPI_Send(&result, 1, MPI_INT, 0, tag, MPI_COMM_WORLD);
