@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
         start = MPI_Wtime();
     }
     for (i = 0; i < N /size; i ++) {
-        number = i * size + rank;
+        number = i + rank * N / size;
         if (number == 0 || number == 1) {
             continue;
         }
@@ -39,8 +39,9 @@ int main(int argc, char* argv[]) {
         }
         end = MPI_Wtime();
         totaltime = (end - start);
-        printf("The number of prime numbers between 0 and %d is %d\n", N, result);
-        printf("the time cost is %lfs\n", totaltime);
+        //printf("The number of prime numbers between 0 and %d is %d\n", N, result);
+        //printf("the time cost is %lfs\n", totaltime);
+        printf("%lf", totaltime);
     }
     else {
         MPI_Send(&result, 1, MPI_INT, 0, tag, MPI_COMM_WORLD);

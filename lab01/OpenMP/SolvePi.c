@@ -22,7 +22,8 @@ int main(int argc, char *argv[])
     }
     end = omp_get_wtime();
     pi = pi * w;
-    printf("The value of pi is %.12lf\n", pi);
-    printf("the time cost is %lfs\n", end - start);
+    //printf("The value of pi is %.12lf\n", pi);
+    //printf("the time cost is %lfs\n", end - start);
+    printf("%lf", end - start);
     return 0;
 }

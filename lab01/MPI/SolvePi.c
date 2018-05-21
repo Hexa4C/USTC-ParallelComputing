@@ -35,8 +35,9 @@ int main(int argc, char* argv[]) {
         }
         end = MPI_Wtime();
         totaltime = (end - start);
-        printf("The value of pi is %.12lf\n", pi);
-        printf("the time cost is %lfs\n", totaltime);
+        //printf("The value of pi is %.12lf\n", pi);
+        //printf("the time cost is %lfs\n", totaltime);
+        printf("%lf", totaltime);
     }
     else {
         MPI_Send(&pi, 1, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD);
