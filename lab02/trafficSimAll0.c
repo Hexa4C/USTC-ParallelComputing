@@ -10,6 +10,9 @@ int main(int argc, char* argv[]) {
     int i, j;
     int ncar = atoi(argv[1]);
     int cycles = atoi(argv[2]);
+    char* path = argv[3];
+    FILE *fp;
+    fp = fopen(path, "w");
     int roadlen = 2 * VMAX * cycles;
     double start, end;
     double totaltime;
@@ -77,15 +80,10 @@ int main(int argc, char* argv[]) {
         }
     }
     if (rank == 0) {
-        /* for (i = 0; i < roadlen; i ++) {
-            for (j = 0; j < cell[i]; j ++) {
-                printf("%d ", i);
-            }
-            if (cell[i] > 0) {
-                printf("\n");
-            }
-        } */
         end = MPI_Wtime();
+        for (i = 0; i < roadlen; i ++) {
+            fprintf(fp, "%d,%d\n", i, cell[i]);
+        }
         totaltime = end - start;
         printf("%lf", totaltime);
     }
