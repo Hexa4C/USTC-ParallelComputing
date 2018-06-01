@@ -1,5 +1,5 @@
 #!/bin/bash
-mpicc NBodySim.c -o NBodySim
+mpicc NBodySim.c -o NBodySim -lm
 echo -e "|64|\c"
 mpirun -machinefile mf.txt -np 1 ./NBodySim 64 1000
 echo -e "|\c"
