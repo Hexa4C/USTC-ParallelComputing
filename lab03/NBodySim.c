@@ -4,13 +4,13 @@
 #include <math.h>
 
 #define G 6.67e-11
-#define delta_t 1e-3
 
 int N;
+long double delta_t = 1;
 
-void compute_force (double *x, double *y, int bid, double *fx, double *fy) {
+void compute_force (long double *x, long double *y, int bid, long double *fx, long double *fy) {
     int i, x0 = x[bid], y0 = y[bid];
-    double r, sumx = 0, sumy = 0, cosine, sine;
+    long double r, sumx = 0, sumy = 0, cosine, sine;
     for (i = 0; i < N; i ++) {
         if (i == bid) {
             continue;
@@ -21,19 +21,19 @@ void compute_force (double *x, double *y, int bid, double *fx, double *fy) {
         if ( r < 2) {
             r = 2;
         }
-        sumx += G * cosine / (r * r);
-        sumy += G * sine / (r * r);
+        sumx += 100 * G * cosine / (r * r);
+        sumy += 100 * G * sine / (r * r);
     }
     fx[bid] = sumx;
     fy[bid] = sumy;
 }
 
-void compute_velocities (double *vx, double *vy, double *fx, double *fy, int bid) {
+void compute_velocities (long double *vx, long double *vy, long double *fx, long double *fy, int bid) {
     vx[bid] += fx[bid] * delta_t;
     vy[bid] += fy[bid] * delta_t;
 }
 
-void compute_positions (double *x, double *y, double *vx, double *vy, int bid) {
+void compute_positions (long double *x, long double *y, long double *vx, long double *vy, int bid) {
     x[bid] += vx[bid] * delta_t;
     y[bid] += vy[bid] * delta_t;
 }
@@ -42,17 +42,17 @@ int main(int argc, char* argv[]) {
     int size, rank, tag = 1;
     int len;
     int i, j;
-    double *x, *y, *fx, *fy, *vx, *vy;
+    long double *x, *y, *fx, *fy, *vx, *vy;
     double start, end;
     int steps = atoi(argv[2]);
     N = atoi(argv[1]);
     len = sqrt(N);
-    x = (double *)malloc(N * sizeof(double));
-    y = (double *)malloc(N * sizeof(double));
-    fx = (double *)malloc(N * sizeof(double));
-    fy = (double *)malloc(N * sizeof(double));
-    vx = (double *)malloc(N * sizeof(double));
-    vy = (double *)malloc(N * sizeof(double));
+    x = (long double *)malloc(N * sizeof(long double));
+    y = (long double *)malloc(N * sizeof(long double));
+    fx = (long double *)malloc(N * sizeof(long double));
+    fy = (long double *)malloc(N * sizeof(long double));
+    vx = (long double *)malloc(N * sizeof(long double));
+    vy = (long double *)malloc(N * sizeof(long double));
     for (i = 0; i < N; i ++) {
         vx[i] = 0;
         vy[i] = 0;
@@ -67,19 +67,19 @@ int main(int argc, char* argv[]) {
         start = MPI_Wtime();
     }
     for (i = 0; i < steps; i ++) {
-        for (j = N / size * rank; j < N / size; j ++) {
+        for (j = N / size * rank; j < N / size * rank + N / size; j ++) {
             compute_force(x, y, j, fx, fy);
             compute_velocities(vx, vy, fx, fy, j);
             compute_positions(x, y, vx, vy, j);
         }
         if (size > 1) {
             for (j = 0; j < size; j ++) {
-                MPI_Bcast(&x[N / size * j], N / size, MPI_DOUBLE, j, MPI_COMM_WORLD);
-                MPI_Bcast(&y[N / size * j], N / size, MPI_DOUBLE, j, MPI_COMM_WORLD);
-                MPI_Bcast(&vx[N / size * j], N / size, MPI_DOUBLE, j, MPI_COMM_WORLD);
-                MPI_Bcast(&vy[N / size * j], N / size, MPI_DOUBLE, j, MPI_COMM_WORLD);
-                MPI_Bcast(&fx[N / size * j], N / size, MPI_DOUBLE, j, MPI_COMM_WORLD);
-                MPI_Bcast(&fy[N / size * j], N / size, MPI_DOUBLE, j, MPI_COMM_WORLD);
+                MPI_Bcast(&x[N / size * j], N / size, MPI_LONG_DOUBLE, j, MPI_COMM_WORLD);
+                MPI_Bcast(&y[N / size * j], N / size, MPI_LONG_DOUBLE, j, MPI_COMM_WORLD);
+                MPI_Bcast(&vx[N / size * j], N / size, MPI_LONG_DOUBLE, j, MPI_COMM_WORLD);
+                MPI_Bcast(&vy[N / size * j], N / size, MPI_LONG_DOUBLE, j, MPI_COMM_WORLD);
+                MPI_Bcast(&fx[N / size * j], N / size, MPI_LONG_DOUBLE, j, MPI_COMM_WORLD);
+                MPI_Bcast(&fy[N / size * j], N / size, MPI_LONG_DOUBLE, j, MPI_COMM_WORLD);
             }
         }
     }
