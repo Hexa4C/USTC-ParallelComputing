@@ -4,6 +4,7 @@
 #include <math.h>
 
 #define G 6.67e-11
+#define M 10000
 
 int N;
 long double delta_t = 1;
@@ -21,21 +22,21 @@ void compute_force (long double *x, long double *y, int bid, long double *fx, lo
         if ( r < 2) {
             r = 2;
         }
-        sumx += 100 * G * cosine / (r * r);
-        sumy += 100 * G * sine / (r * r);
+        sumx += 100 * 100 * G * M * M * cosine / (r * r);
+        sumy += 100 * 100 * G * M * M * sine / (r * r);
     }
     fx[bid] = sumx;
     fy[bid] = sumy;
 }
 
 void compute_velocities (long double *vx, long double *vy, long double *fx, long double *fy, int bid) {
-    vx[bid] += fx[bid] * delta_t;
-    vy[bid] += fy[bid] * delta_t;
+    vx[bid] += fx[bid] * delta_t / M;
+    vy[bid] += fy[bid] * delta_t / M;
 }
 
 void compute_positions (long double *x, long double *y, long double *vx, long double *vy, int bid) {
-    x[bid] += vx[bid] * delta_t;
-    y[bid] += vy[bid] * delta_t;
+    x[bid] += vx[bid] * delta_t / 100;
+    y[bid] += vy[bid] * delta_t / 100;
 }
 
 int main(int argc, char* argv[]) {
